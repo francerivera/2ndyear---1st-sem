@@ -1,304 +1,245 @@
 import random
 
+pokemon_dict = {
+    "PIKACHU": ("ELECTRIC", 50),
+    "CHARMANDER": ("FIRE", 55),
+    "BULBASAUR": ("GRASS", 60),
+    "SQUIRTLE": ("WATER", 58),
+    "JIGGLYPUFF": ("FAIRY", 45),
+    "EEVEE": ("NORMAL", 52),
+    "SNORLAX": ("NORMAL", 80),
+    "GENGAR": ("POISON", 70),
+    "MACHAMP": ("FIGHTING", 75),
+    "MEWTWO": ("PSYCHIC", 90),
+    "DIGLETT": ("GROUND", 55),
+    "MAGNEMITE": ("STEEL", 35),
+    "ONIX": ("ROCK", 45),
+    "GIRATINA": ("GHOST", 90),
+    "ARCANINE": ("FIRE", 45),
+}
 
-def start_game():
-    pokemon_dict = {
-        "PIKACHU": ("ELECTRIC", 50),
-        "CHARMANDER": ("FIRE", 55),
-        "BULBASAUR": ("GRASS", 60),
-        "SQUIRTLE": ("WATER", 58),
-        "JIGGLYPUFF": ("FAIRY", 45),
-        "EEVEE": ("NORMAL", 52),
-        "SNORLAX": ("NORMAL", 80),
-        "GENGAR": ("POISON", 70),
-        "MACHAMP": ("FIGHTING", 75),
-        "MEWTWO": ("PYSCHIC", 90),
-        "DIGLETT": ("GROUND", 55),
-        "MAGNEMITE": ("STEEL", 35),
-        "ONIX": ("ROCK", 45),
-        "GIRATINA": ("GHOST", 90),
-        "ARCANINE": ("FIRE", 45),
-    }
+print("Welcome to my Pokemon Game!")
+print("a.) Play\nb.) Tutorial")
+user_input = input("Enter the key: ").lower()
 
-    type_interactions = {
-        "ELECTRIC": [
-            ["WATER"],  # Strong Against
-            []  # Weak Against
-        ],
-        "FIRE": [
-            ["GRASS", "STEEL"],  # Strong Against
-            ["WATER", "ROCK", "FIRE"]  # Weak Against
-        ],
-        "POISON": [
-            ["GRASS", "FAIRY"],  # Strong Against
-            ["POISON", "PSYCHIC"]  # Weak Against
-        ],
-        "WATER": [
-            ["FIRE", "ROCK"],  # Strong Against
-            ["ELECTRIC", "GRASS"]  # Weak Against
-        ],
-        "NORMAL": [
-            [],  # Strong Against
-            ["ROCK", "STEEL"]  # Weak Against
-        ],
-        "FIGHTING": [
-            ["NORMAL", "ROCK", "STEEL"],  # Strong Against
-            ["PYSCHIC", "FAIRY"]  # Weak Against
-        ],
-        "PYSCHIC": [
-            ["FIGHTING", "POISON"],  # Strong Against
-            []  # Weak Against
-        ],
-        "ROCK": [
-            ["FIRE"],  # Strong Against
-            ["FIGHTING", "STEEL"]  # Weak Against
-        ],
-        "STEEL": [
-            ["ROCK", "FAIRY"],  # Strong Against
-            ["FIRE", "WATER", "ELECTRIC"]  # Weak Against
-        ],
-        "FAIRY": [
-            ["FIGHTING"],  # Strong Against
-            ["POISON", "STEEL"]  # Weak Against
-        ],
-        "GRASS": [
-            ["WATER", "ROCK"],  # Strong Against
-            ["FIRE"]  # Weak Against
-        ]
-    }
-
+if user_input == "a":
     print("┌" + "─" * 14 + "┬" + "─" * 12 + "┬" + "─" * 11 + "┐")
     print("│ Pokemons     │ Types      │ Base Power│")
     print("├" + "─" * 14 + "┼" + "─" * 12 + "┼" + "─" * 11 + "┤")
 
-    for elements, (pokemon, power) in sorted(pokemon_dict.items()):
-        print(f"│ {elements:12} │ {pokemon:10} │ {power:3}       │")
+    for pokemon, (element, power) in sorted(pokemon_dict.items()):
+        print(f"│ {pokemon:12} │ {element:10} │ {power:3}       │")
 
     print("└" + "─" * 14 + "┴" + "─" * 12 + "┴" + "─" * 11 + "┘")
-
-    battle_result = ""
-    match_history = []
-
-    class Pokemon:
-        def __init__(self, name, pokemon_type, base_power):
-            self.name = name
-            self.pokemon_type = pokemon_type
-            self.base_power = base_power
-
-
-    def character_select():
-        while True:
-            user_input = str(input("Please select your pokemon: ")).upper()
-            counter = 1
-            for key in pokemon_dict:
-                selected_pokemon_name, selected_pokemon_power = pokemon_dict[user_input]
-                selected_pokemon = Pokemon(user_input, selected_pokemon_name, selected_pokemon_power)
-                selected_pokemon.pokemon_info()
-
-
-    def computer_bot():
-        return random.choice(list(pokemon_dict.keys()))
-        computer_choice = computer_bot()
-        computer_pokemon_name, computer_pokemon_power = pokemon_dict[computer_choice]
-        computer_pokemon = Pokemon(computer_choice, computer_pokemon_name, computer_pokemon_power)
-        print("\nComputer's choice:")
-        computer_pokemon.pokemon_info()
-
-    def calculate_attack(selected_pokemon, computer_pokemon, selected_pokemon_power, computer_pokemon_power):
-        if selected_pokemon_power == 0:
-            selected_pokemon_power  = selected_pokemon[1]
-        if computer_pokemon_power == 0:
-            computer_pokemon_power = computer_pokemon[1]
-        return selected_pokemon_power, computer_pokemon_power
-
-    def element_interact(selected_pokemon, computer_pokemon, selected_pokemon_power, computer_pokemon_power):
-        lower_limit =  selected_pokemon_power if selected_pokemon_power < computer_pokemon_power else computer_pokemon_power
-        if (computer_pokemon[2] in type_interactions[selected_pokemon[2]][0]) or (computer_pokemon[2] in type_interactions[selected_pokemon[2]][1]):
-            if computer_pokemon[2] in type_interactions[selected_pokemon[2]][0]:
-                player_plus_minus = random.randint(0, computer_pokemon_power)
-                computer_plus_minus = random.randint(-lower_limit, 0)
-                selected_pokemon_power += player_plus_minus
-                computer_pokemon_power += computer_plus_minus
-                print(
-                    f"User's {selected_pokemon} ({selected_pokemon.pokemon_type}) is super effective against Computer's {computer_pokemon} ({computer_pokemon.pokemon_type}\n"
-                    f"User's Final Power: {selected_pokemon_power}\n"
-                    f"Computer's Final Power: {computer_pokemon_power}")
-            elif computer_pokemon[2] in type_interactions[selected_pokemon[2]][1]:
-                player_plus_minus = random.randint(-lower_limit, 0)
-                computer_plus_minus = random.randint(0, selected_pokemon_power)
-                selected_pokemon_power += player_plus_minus
-                computer_pokemon_power += computer_plus_minus
-                print(
-                    f"User's {selected_pokemon} ({selected_pokemon.pokemon_type}) is not very effective against Computer's {computer_pokemon} ({computer_pokemon.pokemon_type}\n"
-                    f"User's Final Power: {selected_pokemon_power}\n"
-                    f"Computer's Final Power: {computer_pokemon_power}")
-
-        else:
-            player_plus_minus = random.randint(-lower_limit, computer_pokemon_power)
-            computer_plus_minus = random.randint(-lower_limit, selected_pokemon_power)
-            selected_pokemon_power += computer_plus_minus
-            computer_pokemon_power += player_plus_minus
-            print(
-                f"User's {selected_pokemon} ({selected_pokemon.pokemon_type}) only deals normal damage against Computer's {computer_pokemon} ({computer_pokemon.pokemon_type}\n"
-                f"User's Final Power: {selected_pokemon_power}\n"
-                f"Computer's Final Power: {computer_pokemon_power}")
-
-    def battle(selected_pokemon, computer_pokemon, final_user_power, final_computer_power):
-        after_user_power = 0
-        after_computer_power = 0
-        if final_user_power > final_computer_power:
-            print("You Won! You will absorb the power of the Computer's pokemon")
-            after_user_power += final_user_power + final_computer_power
-            print(f"Your {selected_pokemon}'s  New Final Power is now {after_user_power}!")
-            battle_result = "Won"
-            after_computer_power = 0
-            computer_pokemon = ""
-
-        elif final_user_power < final_computer_power:
-            print("You Lost! Your pokemon's power will be absorbed by the computer's pokemon")
-            after_computer_power += final_user_power + final_computer_power
-            print(f"Computer's {computer_pokemon} has a New Final Power of {after_computer_power}!")
-            battle_result  = "lost"
-            after_user_power = 0
-            selected_pokemon = ""
-
-        else:
-            print("No winner")
-            print("The match is a TIE!")
-            battle_result = "tie"
-            after_user_power = 0
-            after_computer_power = 0
-
-        return  battle_result, after_user_power, after_computer_power
-
-def play(selected_pokemon, computer_pokemon, selected_pokemon_power, computer_pokemon_power, match_no):
-    match_no += 1
-    if selected_pokemon == "":
-        selected_pokemon = character_select()
-    if computer_pokemon == "":
-        computer_pokemon = computer_bot()
-    selected_pokemon_power, computer_pokemon_power = calculate_attack(selected_pokemon=selected_pokemon, computer_pokemon=computer_pokemon,
-                                                                      selected_pokemon_power=selected_pokemon_power,computer_pokemon_power=computer_pokemon_power)
-    final_user_power, final_computer_power, player_plus_minus, computer_plus_minus = element_interact(selected_pokemon=selected_pokemon, computer_pokemon=computer_pokemon,
-                                                                                                      selected_pokemon_power=selected_pokemon_power,computer_pokemon_power=computer_pokemon_power)
-    battle_result, after_user_power, after_computer_power = battle(selected_pokemon=selected_pokemon, computer_pokemon=computer_pokemon,
-                                                                   final_user_power=final_user_power, final_computer_power=final_computer_power)
-    match_history.append([match_no, selected_pokemon_power[0], selected_pokemon_power,
-                          f"+{player_plus_minus}" if player_plus_minus > 0 else player_plus_minus,
-                          final_user_power, computer_pokemon[0], computer_pokemon_power,
-                          f"+{computer_plus_minus}" if computer_plus_minus > 0 else computer_plus_minus,
-                          final_computer_power, battle_result, after_user_power, after_computer_power])
-    selected_pokemon_power = after_user_power
-    computer_pokemon_power = after_computer_power
-    return  selected_pokemon, computer_pokemon, selected_pokemon_power, computer_pokemon_power, battle_result, match_no
-
-def main_menu():
-    match_no = 0
-    while True:
-        print("1.) Play\n2.) Tutorial")
-        user_input = int(input("Enter the number: "))
-        if user_input == "1":
-            selected_pokemon = ""
-            computer_pokemon = ""
-            selected_pokemon_power = 0
-            computer_pokemon_power = 0
-            play_break = False
-            while True:
-                selected_pokemon, computer_pokemon, selected_pokemon_power, computer_pokemon_power, battle_result, match_no = play(
-                    selected_pokemon=selected_pokemon, computer_pokemon=computer_pokemon, selected_pokemon_power=selected_pokemon_power,
-                    computer_pokemon_power=computer_pokemon_power, match_no=match_no)
-                while True:
-                    print("Do you want to continue fighting enemies?")
-                    print("Enter the key from the choices:\n'n' : New Pokemon\n'r' : Restart\n'm' : Match History\n't' : Main Menu\n'x' : Exit", end="")
-                    if battle_result == "won":
-                        print("'c' : Continue")
-                    user_select = input("Enter the key: ")
-                    if user_select.lower() == 'm':
-                        print(match_history)
-                        input("Enter any key to go back: ")
-                        continue
-                    elif user_select.lower() == "c":
-                        if battle_result == "won":
-                            computer_pokemon = ""
-                            computer_pokemon_power = 0
-                            break
-                        else:
-                            print("Invalid Input")
-                            continue
-                    elif user_select.lower() == "n":
-                        if battle_result == "won":
-                            print("Your progress will lose if you proceed")
-                            print("'e' : No, I changed my mind\n'y' : Yes")
-                            change_choice = input("Enter the key: ")
-                            if change_choice.lower() == "e":
-                                continue
-                            elif change_choice.lower() == "y":
-                                computer_pokemon = ""
-                                computer_pokemon_power = 0
-
-                        selected_pokemon = ""
-                        selected_pokemon_power = 0
-                        break
-
-                    elif user_select.lower() == "x":
-                        while True:
-                            print("Do you want to quit? All progress will be lost")
-                            print("'e' : No, I changed my mind\n'y' : Yes")
-                            exit_input = input("Enter the key: ")
-                            if exit_input.lower() == 'y':
-                                print("Thank you for playing!")
-                                quit()
-                            elif exit_input.lower() == 'e':
-                                break
-                            else:
-                                print("Invalid Input")
-                                continue
-                    elif user_select.lower() == 'r':
-                        while True:
-                            print("Do you want to restart? It will reset both the user's and computer's pokemon and base power")
-                            print("'e' : No, I changed my mind\n'y' : Yes")
-                            change_choice = input("Enter the key: ")
-                            if change_choice.lower() == 'e':
-                                break
-                            elif change_choice.lower() == 'y':
-                                computer_pokemon = ""
-                                computer_pokemon_power = 0
-                                selected_pokemon = ""
-                                selected_pokemon_power = 0
-                            break
-                        break
-                    elif user_select.lower() == 't':
-                        while True:
-                            print("Both the user's and the computer's pokemon and base power will reset once you go back to the main menu")
-                            print("'e' : No, I changed my mind\n'y' : Yes")
-                            menu_select = input("Enter the key: ")
-                            if menu_select.lower() == 'e':
-                                break
-                            elif menu_select.lower() == 'y':
-                                computer_pokemon = ""
-                                computer_pokemon_power = 0
-                                selected_pokemon = ""
-                                selected_pokemon_power = 0
-                                match_no = match_no
-                                play_break = True
-                                break
-                        break
-                    else:
-                        print("Invalid input")
-                        continue
-
-                if play_break:
-                    break
-
-        elif user_select.lower() == "2":
-            print("""To start playing this game:\n
+elif user_input == "b":
+    print("""To start playing this game:\n
 1. Choose your starter Pokemon from the available options. Each with unique types.\n
 2. Pay attention to type advantages, such as Water being strong against Fire.
 3. If you have a strong element versus your opponent, you will have an additional power. If you are have a weak element versus yout opponent, the additional power will be given to the opponent. If they are the same element, it can be a tie.
 4. Your opponent will be random so it is all luck. Good luck!
 5. There are keys to help you navigate inside the game. Enter the keys that you want.
 6. "Gotta catch 'em all!""")
+else:
+    print("Invalid input. Please enter 'a' to play or 'b' for the tutorial.")
 
-    main_menu()
 
-start_game()
+elements_interact = [
+    [["GRASS", "STEEL"], ["WATER", "ROCK", "FIRE"]], # FIRE
+    [["WATER"], ["GROUND"]],  # ELECTRIC
+    [["WATER", "GROUND", "ROCK"], ["FIRE", "POISON"]],  # GRASS
+    [["FIRE", "GROUND", "ROCK"], ["ELECTRIC", "GRASS"]],  # WATER
+    [["FIGHTING", "POISON"], ["GHOST"]],  # PSYCHIC
+    [["NORMAL", "ROCK", "STEEL"], ["PSYCHIC", "FAIRY"]],  # FIGHTING
+    [["FIRE", "ELECTRIC", "POISON", "ROCK", "STEEL"], ["WATER", "GRASS"]],  # GROUND
+    [["FIRE"], ["WATER", "GRASS", "FIGHTING", "GROUND", "STEEL"]],  # ROCK
+    [["PSYCHIC", "GHOST"], ["GHOST", "DARK"]],  # GHOST
+    [["ICE", "ROCK", "FAIRY"], ["FIRE", "FIGHTING", "GROUND"]],  # STEEL
+    [["FIGHTING", "DRAGON", "DARK"], ["POISON", "STEEL"]]  # FAIRY
+]
+
+# Mapping element names to their indices
+element_indices = {
+    "FIRE": 0,
+    "ELECTRIC": 1,
+    "GRASS": 2,
+    "WATER": 3,
+    "PSYCHIC": 4,
+    "FIGHTING": 5,
+    "GROUND": 6,
+    "ROCK": 7,
+    "GHOST": 8,
+    "STEEL": 9,
+    "FAIRY": 10,
+    "NORMAL": 11
+}
+
+match_history = []
+match_number = 1
+
+while True:
+    pokemon_input = str(input("Please select a type of Pokemon: ")).upper()
+
+    if pokemon_input in pokemon_dict:
+        computer_choice = random.choice(list(pokemon_dict.keys()))
+
+        def assign_elements(player_pokemon, computer_pokemon):
+            global match_number
+            player_element, player_power = pokemon_dict[player_pokemon]
+            computer_element, computer_power = pokemon_dict[computer_pokemon]
+
+            print(f"Player's Pokémon Element: {player_element}, Power: {player_power}")
+            print(f"Computer's Pokémon Element: {computer_element}, Power: {computer_power}")
+
+            if player_element == computer_element:
+                random_number = random.randint(1, 10)
+                damage = player_power + random_number
+                damage2 = computer_power + random_number
+                print(f"Both Pokémon have the same element!\nYour Pokémon gained a random additional power: {damage}\nComputer's Pokémon gained a random additional power: {damage2}")
+            elif computer_element in elements_interact[element_indices[player_element]][0]:
+                damage = player_power * 2
+                damage2 = computer_power
+                print(f"{player_element} is strong against {computer_element}! Damage is 2x: {damage}")
+            elif computer_element in elements_interact[element_indices[player_element]][1]:
+                damage = player_power * 0.5
+                damage2 = computer_power
+                print(f"{player_element} is weak against {computer_element}! Damage is 1/2: {damage}")
+            else:
+                damage = player_power
+                damage2 = computer_power
+                print(f"{player_element} has no special effect on {computer_element}. Damage is: {damage}")
+
+            if damage > damage2:
+                print(f"Player wins! Your Pokémon will absorb Computer's Pokémon power. New Power: {damage + damage2}")
+                after_battle_player_power = damage + damage2
+                after_battle_computer_power = 0
+                match_result = "Player wins"
+            elif damage < damage2:
+                print(f"Computer wins! Computer's Pokémon will absorb your Pokémon's power. New Power: {damage2 + damage}")
+                after_battle_player_power = 0
+                after_battle_computer_power = damage2 + damage
+                match_result = "Computer wins"
+            else:
+                print("It's a tie!")
+                after_battle_player_power = player_power
+                after_battle_computer_power = computer_power
+                match_result = "Tie"
+
+            # Add match result to history
+            match_history.append({
+                "Match Number": match_number,
+                "Player Pokémon": player_pokemon,
+                "Player Power (before)": player_power,
+                "Player Additional Damage": damage - player_power,
+                "Player Total Damage": damage,
+                "Computer Pokémon": computer_pokemon,
+                "Computer Power (before)": computer_power,
+                "Computer Additional Damage": damage2 - computer_power,
+                "Computer Total Damage": damage2,
+                "Match Result": match_result,
+                "Player Power (after)": after_battle_player_power,
+                "Computer Power (after)": after_battle_computer_power
+            })
+
+            match_number += 1
+            return match_result
+
+        match_result = assign_elements(pokemon_input, computer_choice)
+    else:
+        print("Invalid Pokémon selected. Please try again.")
+
+    saved_progress = {
+        "player_pokemon": None,
+        "player_power": 0
+    }
+
+
+    player_progress = 0
+
+    while True:
+        print("\nDo you want to continue fighting enemies?")
+        print("Enter the key from the choices:\n'n' : New Pokémon\n'r' : Restart\n'm' : Match History\n't' : Main Menu\n'x' : Exit")
+        if match_result == "Player wins":
+            print("\n'c' : Continue")
+        user_select = input("Enter the key: ")
+
+        if user_select.lower() == 'm':
+            for match in match_history:
+                print("\nMatch Number:", match["Match Number"])
+                print("Player Pokémon:", match["Player Pokémon"])
+                print("Player Power (before):", match["Player Power (before)"])
+                print("Player Additional Damage:", match["Player Additional Damage"])
+                print("Player Total Damage:", match["Player Total Damage"])
+                print("Computer Pokémon:", match["Computer Pokémon"])
+                print("Computer Power (before):", match["Computer Power (before)"])
+                print("Computer Additional Damage:", match["Computer Additional Damage"])
+                print("Computer Total Damage:", match["Computer Total Damage"])
+                print("Match Result:", match["Match Result"])
+                print("Player Power (after):", match["Player Power (after)"])
+                print("Computer Power (after):", match["Computer Power (after)"])
+            input("Enter any key to go back: ")
+            continue
+
+        elif user_select.lower() == "c":
+            if match_result == "Player wins":
+                computer_choice = random.choice(list(pokemon_dict.keys()))
+                print(f"Continuing with {player_pokemon} with Power: {player_power}")
+                break
+            else:
+                print("Invalid Input")
+                continue
+
+        elif user_select.lower() == "n":
+            player_pokemon = ""
+            player_power = 0
+            break
+
+        elif user_select.lower() == "x":
+            while True:
+                print("Do you want to quit? All progress will be lost")
+                print("'e' : No, I changed my mind\n'y' : Yes")
+                exit_input = input("Enter the key: ")
+                if exit_input.lower() == 'y':
+                    print("Thank you for playing!")
+                    quit()
+                elif exit_input.lower() == 'e':
+                    break
+                else:
+                    print("Invalid Input")
+                    continue
+
+        elif user_select.lower() == 'r':
+            while True:
+                print("Do you want to restart? It will reset both the user's and computer's Pokémon and base power")
+                print("'e' : No, I changed my mind\n'y' : Yes")
+                change_choice = input("Enter the key: ")
+                if change_choice.lower() == 'e':
+                    break
+                elif change_choice.lower() == 'y':
+                    computer_choice = ""
+                    player_pokemon = ""
+                    player_power = 0  # Reset player's power
+                    break
+            break
+
+        elif user_select.lower() == 't':
+            while True:
+                print("Both the user's and the computer's Pokémon and base power will reset once you go back to the main menu")
+                print("'e' : No, I changed my mind\n'y' : Yes")
+                menu_select = input("Enter the key: ")
+                if menu_select.lower() == 'e':
+                    break
+                elif menu_select.lower() == 'y':
+                    computer_pokemon = ""
+                    computer_pokemon_power = 0
+                    player_pokemon = ""
+                    player_power = 0
+
+                    # Return to main menu
+                    print("Welcome to my Pokemon Game!")
+                    print("a.) Play\nb.) Tutorial")
+                    user_input = input("Enter the key: ").lower()
+                    break
+            break
+        else:
+            print("Invalid input")
+            continue
