@@ -175,6 +175,7 @@ while True:
         match_result = assign_elements(pokemon_input, computer_choice)
     else:
         print("Invalid Pokémon selected. Please try again.")
+        continue
 
     # Save progress for the player
     saved_progress = {
@@ -188,7 +189,7 @@ while True:
     while True:
         print("\nDo you want to continue fighting enemies?")
         print(
-            "Enter the key from the choices:\n'n' : New Pokemon\n'r' : Restart\n'm' : Match History\n't' : Main Menu\n'x' : Exit")
+            "Enter the key from the choices:\n'n' : New Pokemon\n'm' : Match History\n'x' : Exit")
         if match_result == "Player wins":
             print("\n'c' : Continue")
         user_select = input("Enter the key: ")
@@ -214,14 +215,28 @@ while True:
         elif user_select.lower() == "c":
             if match_result == "Player wins":
                 # Continue playing with the winning Pokémon
-                pokemon_input = pokemon_input  # Keep the same Pokémon
                 previous_power = match_history[-1]["Player Power (after)"]  # Get the previous power
                 computer_choice = random.choice(list(pokemon_dict.keys()))
                 computer_power = pokemon_dict[computer_choice][1]  # Get the computer's power
-                pokemon_dict[pokemon_input] = (pokemon_dict[pokemon_input][0],
-                                               previous_power + pokemon_dict[pokemon_input][1])  # Add the previous power to the current power
-                # Increase the computer's power
-                pokemon_dict[computer_choice] = (pokemon_dict[computer_choice][0], computer_power + pokemon_dict[pokemon_input][1])
+
+                # Increase player's Pokémon power
+                pokemon_dict[pokemon_input] = (
+                    pokemon_dict[pokemon_input][0],
+                    previous_power + pokemon_dict[pokemon_input][1]  # Add the previous power to the current power
+                )
+
+                # Determine consecutive wins
+                consecutive_wins = sum(1 for match in match_history[-3:] if match.get("Result") == "Player wins")
+
+                # Add a random factor to the computer's power, scaled by consecutive wins
+                random_factor = random.uniform(1, 1.5)  # Reduce the randomness range
+
+                # Ensure the computer's power increases gradually
+                pokemon_dict[computer_choice] = (
+                    pokemon_dict[computer_choice][0],
+                    computer_power + int(pokemon_dict[pokemon_input][1] * random_factor)
+                )
+
                 match_result = assign_elements(pokemon_input, computer_choice)
                 continue
             else:
@@ -258,60 +273,6 @@ while True:
                 else:
                     print("Invalid Input")
                     continue
-
-        # When the user wants to restart
-        elif user_select.lower() == 'r':
-            while True:
-                print("Do you want to restart? It will reset both the user's and computer's Pokémon and base power")
-                print("'e' : No, I changed my mind\n'y' : Yes")
-                change_choice = input("Enter the key: ")
-                if change_choice.lower() == 'e':
-                    break
-                elif change_choice.lower() == 'y':
-                    computer_choice = ""
-                    player_pokemon = ""
-                    player_power = 0  # Reset player's power
-                    break
-            break
-
-        # When the user wants to go back to the main menu
-        elif user_select.lower() == 't':
-            print(
-                "Both the user's and the computer's Pokémon and base power will reset once you go back to the main menu")
-            print("'e' : No, I changed my mind\n'y' : Yes")
-            menu_select = input("Enter the key: ")
-            if menu_select.lower() == 'e':
-                break
-            elif menu_select.lower() == 'y':
-                computer_pokemon = ""
-                computer_pokemon_power = 0
-                player_pokemon = ""
-                player_power = 0
-
-                while True:
-                    user_input = input("Enter 'a' to play or 'b' for the tutorial: ")
-
-                    if user_input == "a":
-                        print("┌" + "─" * 14 + "┬" + "─" * 12 + "┬" + "─" * 11 + "┐")
-                        print("│ Pokemons     │ Types      │ Base Power│")
-                        print("├" + "─" * 14 + "┼" + "─" * 12 + "┼" + "─" * 11 + "┤")
-
-                        for pokemon, (element, power) in sorted(pokemon_dict.items()):
-                            print(f"│ {pokemon:12} │ {element:10} │ {power:3}       │")
-
-                        print("└" + "─" * 14 + "┴" + "─" * 12 + "┴" + "─" * 11 + "┘")
-                        break
-                    elif user_input == "b":
-                        print("""To start playing this game:\n
-                    1. Choose your starter Pokemon from the available options. Each has unique types.\n
-                    2. Pay attention to type advantages, such as Water being strong against Fire.
-                    3. If you have a strong element versus your opponent, you will have an additional power. If you have a weak element versus your opponent, the additional power will be given to the opponent. If they are the same element, it can be a tie.
-                    4. Your opponent will be random so it is all luck. Good luck!
-                    5. There are keys to help you navigate inside the game. Enter the keys that you want.
-                    6. "Gotta catch 'em all!""")
-                        break
-                    else:
-                        print("Invalid input. Please enter 'a' to play or 'b' for the tutorial.")
 
         else:
             print("Invalid input")
