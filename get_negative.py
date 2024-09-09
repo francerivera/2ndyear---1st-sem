@@ -34,6 +34,8 @@ while True:
         result = num1 ** num2
     elif choice == '7':
         result = num1 // num2
+    elif choice.lower() == 'x':
+        break
     else:
         print("Invalid choice. Please try again.")
         continue
