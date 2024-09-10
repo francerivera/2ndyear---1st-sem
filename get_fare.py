@@ -62,7 +62,7 @@ class FareCalculator:
     def select_vehicle(self):
         while True:
             print("Select a vehicle type:\n(1) Jeepney\n(2) Tricycle (Special)\n(3) Bus\n(4) EXIT")
-            choice = input("Enter your choice: ").lower()
+            choice = input("Enter your choice: ")
 
             if choice == "1":
                 return "jeepney"
@@ -78,7 +78,7 @@ class FareCalculator:
     def select_person_type(self):
         while True:
             print("Select the type of person:\n(1) Regular\n(2) Student\n(3) Senior Citizen\n(4) EXIT")
-            choice = input("Enter your choice: ").lower()
+            choice = input("Enter your choice: ")
 
             if choice == "1":
                 return "regular"
