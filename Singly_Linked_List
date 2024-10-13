@@ -1,0 +1,135 @@
+class linkedlist:
+    def __init__(self):
+        self.head = None  # Initialize the head of the list as None
+
+    def printlist(self):
+        printmoko = self.head  # Start with the head node
+        while printmoko is not None:  # Traverse the list until the end
+            print(printmoko.data)  # Print the data of each node
+            printmoko = printmoko.next  # Move to the next node
+
+    def athead(self, newdata):
+        NewNode = Node(newdata)  # Create a new node
+        NewNode.next = self.head  # Link the new node to the previous head
+        self.head = NewNode  # Update head to the new node
+
+    def atend(self, newdata):
+        NewNode = Node(newdata)  # Create a new node
+        if self.head is None:  # If the list is empty,
+            self.head = NewNode  # The new node becomes the head
+            return
+        lastnode = self.head  # Start from the head
+        while lastnode.next:  # Traverse to the last node
+            lastnode = lastnode.next
+        lastnode.next = NewNode  # Link the last node to the new node
+
+    def inpos(self, newelement, position):
+        NewNode = Node(newelement)  # Create a new node
+        if position <= 1:  # Check if the position is valid (greater than or equal to 1)
+            print("\nPosition should be >=1")
+        elif position == 1:  # If inserting at the head,
+            NewNode.next = self.head  # New node points to the current head
+            self.head = NewNode  # Update the head to the new node
+        else:
+            temp = self.head  # Start from the head
+            for i in range(1, position-1):  # Traverse to the position before insertion
+                if temp is not None:
+                    temp = temp.next
+            if temp is not None:  # If the position exists, insert the new node
+                NewNode.next = temp.next
+                temp.next = NewNode
+            else:
+                print("List is null")  # If the position is out of range
+
+    def searchelement(self, searchValue):
+        temp = self.head  # Start from the head
+        found = 0
+        i = 0
+        if (temp != None):  # Check if the list is not empty
+            while (temp != None):  # Traverse the entire list
+                i += 1
+                if (temp.data == searchValue):  # If the data matches the search value
+                    found += 1
+                    break  # Exit the loop if the element is found
+                temp = temp.next
+            if (found == 1):
+                print(searchValue, "is found at index = ", i)  # Print the index where the element is found
+            else:
+                print(searchValue, "is not found in the list.")
+        else:
+            print("The list is empty.")
+
+    def deleteNode(self, key):
+        temp = self.head  # Start from the head
+        if temp is not None:  # If the list is not empty
+            if temp.data == key:  # If the head contains the key to delete
+                self.head = temp.next  # Update the head to the next node
+                temp = None  # Remove the old head
+                return
+        while temp is not None:  # Traverse the list to find the key
+            if temp.data == key:
+                break
+            prev = temp
+            temp = temp.next
+        if temp is None:  # If the key is not found in the list
+            return
+        prev.next = temp.next  # Skip the node containing the key
+        temp = None  # Remove the node
+
+class Node:
+    def __init__(self, data=None):
+        self.data = data  # Store data in the node
+        self.next = None  # Initialize the next pointer as None
+
+
+list1 = linkedlist()
+list1.head = Node("Data")  # Set the head node
+s2 = Node("Structure")
+s3 = Node("Data")
+s4 = Node("Mining")
+s5 = Node("Data")
+s6 = Node("Cleaning")
+s7 = Node("Game")
+s8 = Node("Development")
+
+list1.head.next = s2
+s2.next = s3
+s3.next = s4
+s4.next = s5
+s5.next = s6
+s6.next = s7
+s7.next = s8
+
+list1.printlist()
+
+# a = input("Search: ")
+# list1.searchelement(a)
+# list1.printlist()
+
+
+# list1.printlist()
+# a = input("\nDelete a Node: ")
+# list1.deleteNode(a)
+# list1.printlist()
+
+
+# list1 = linkedlist()
+# list1.head = Node("Data")
+# e2 = Node("Structure")
+# e3 = Node("Python")
+
+# list1.head.next = e2
+# e2.next = e3
+
+# list1.printlist()
+
+# list1.athead("Welcome to")
+# list1.printlist()
+
+# list1.atend("Linked List")
+# list1.printlist()
+
+# position = int(input("\nWhere to insert Data, please indicate position number:"))
+# data = "Stack"
+# list1.inpos(data, position)
+# list1.printlist()
