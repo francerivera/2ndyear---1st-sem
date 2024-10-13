@@ -1,0 +1,96 @@
+class doublyLinkedList:
+    def __init__(self):
+        self.start_node = None # Initialize the start node as None
+
+    def InsertToEmptyList(self, data):
+        if self.start_node is None:
+            new_node = Node(data)  # Create a new node
+            self.start_node = new_node  # Set the start node to the new node
+        else:
+            print("The list is not empty.")
+
+    def InsertToEnd(self, data):
+        if self.start_node is None:
+            new_node = Node(data)  # Create a new node
+            self.start_node = new_node   # Set the start node to the new node
+            return
+        n = self.start_node  # Start from the head node
+        while n.next is not None:  # Traverse the list until the last node
+            n = n.next
+        new_node = Node(data)  # Create a new node
+        n.next = new_node  # Link the last node to the new node
+        new_node.prev = n  # Link the new node back to the last node
+
+    def DeleteAtStart(self):
+        if self.start_node is None:
+            print("The Linked list is empty, no element to delete")
+            return
+        if self.start_node.next is None:  # If there's only one node,
+            self.start_node = None  # The list becomes empty
+            return
+        self.start_node = self.start_node.next  # Move the head to the next node
+        self.start_node.prev = None  # Remove the previous link
+
+    def delete_at_end(self):
+        if self.start_node is None:
+            print("The Linked list is empty, no element to delete")
+            return
+        if self.start_node.next is None:  # If there's only one node,
+            self.start_node = None  # The list becomes empty
+            return
+        n = self.start_node  # Start from the head node
+        while n.next is not None:  # Traverse to the last node
+            n = n.next
+        n.prev.next = None  # Set the second last node's next pointer to None
+
+    def Display(self):
+        if self.start_node is None:
+            print("The list is empty")
+            return
+        else:
+            n = self.start_node
+            while n is not None:
+                print("Element is: ", n.item)  # Print each element
+                n = n.next  # Move to the next node
+        print("\n")
+
+class Node:
+    def __init__(self, data):
+        self.item = data  # Store the data
+        self.next = None  # Initialize the next pointer as None
+        self.prev = None  # Initialize the previous pointer as None
+
+
+# Initialize the doubly linked list
+double = doublyLinkedList()
+
+# Insert into an empty list
+double.InsertToEmptyList("First")
+double.Display()  # Output: First
+
+# double.InsertToEmptyList("Hello World")
+# double.Display()
+
+# Insert more elements at the end
+double.InsertToEnd("Second")
+double.InsertToEnd("Third")
+double.Display()  # Output: First, Second, Third
+
+# Delete the first element
+double.DeleteAtStart()
+double.Display()  # Output: Second, Third
+
+double.InsertToEnd("Fourth")
+double.Display() # Output: Second, Third, Fourth
+
+# Delete the last element
+double.delete_at_end()
+double.Display()  # Output: Second, Third
+
+# Insert to end again
+double.InsertToEnd("Fifth")
+double.Display()  # Output: Second, Third, Fifth
+
+# Delete from start again
+double.DeleteAtStart()
+double.Display()  # Output: Third, Fifth
