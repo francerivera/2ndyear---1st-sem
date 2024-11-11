@@ -256,7 +256,14 @@ def simulate_battles():
         if p2['health'] <= 0:
             player2_battle_pokemon.remove(p2)
             print(f"{p2['name']} has fainted and is removed from Player 2's team.")
-
+        
+        if not player1_battle_pokemon:
+            print("Player 1 has no Pokémon left! Player 2 wins the battle!")
+            break
+        elif not player2_battle_pokemon:
+            print("Player 2 has no Pokémon left! Player 1 wins the battle!")
+            break
+            
         for player, battle_pokemon, items, currency in [
             ("Player 1", player1_battle_pokemon, player1_items, player1_currency),
             ("Player 2", player2_battle_pokemon, player2_items, player2_currency)
